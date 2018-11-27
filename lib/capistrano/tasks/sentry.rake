@@ -26,7 +26,7 @@ namespace :sentry do
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
 
-      version = `git rev-parse --short=7 HEAD`.strip
+      version = `git rev-parse HEAD`.strip
 
       orga_slug = fetch(:sentry_organization) || fetch(:application)
       project = fetch(:sentry_project) || fetch(:application)
