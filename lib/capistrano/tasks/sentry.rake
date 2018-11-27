@@ -43,7 +43,7 @@ namespace :sentry do
       req.body = JSON.generate(
         version: version,
         refs: [{
-          repository: repo,
+          repository: repo_name,
           commit: fetch(:current_revision) || `git rev-parse HEAD`.strip,
           # previousCommit: fetch(:previous_revision)
         }],
