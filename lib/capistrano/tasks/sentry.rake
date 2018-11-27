@@ -54,7 +54,7 @@ namespace :sentry do
         req = Net::HTTP::Post.new("/api/0/organizations/#{orga_slug}/releases/#{version}/deploys/", headers)
         req.body = JSON.generate(
           environment: environment,
-          name: "#{project}-#{fetch(:environment)}-#{version}-#{fetch(:release_timestamp)}"
+          name: "#{version}-#{fetch(:release_timestamp)}"
         )
         response = http.request(req)
         puts "Cannot notify sentry for new deployment. Response: #{response.code.inspect}: #{response.body}" unless response.is_a? Net::HTTPSuccess
