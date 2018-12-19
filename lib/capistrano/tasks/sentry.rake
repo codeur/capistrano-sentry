@@ -51,15 +51,20 @@ namespace :sentry do
       )
       response = http.request(req)
       if response.is_a? Net::HTTPSuccess
+        info 'Uploaded release infos to Sentry'
         req = Net::HTTP::Post.new("/api/0/organizations/#{orga_slug}/releases/#{version}/deploys/", headers)
         req.body = JSON.generate(
           environment: environment,
           name: "#{version}-#{fetch(:release_timestamp)}"
         )
         response = http.request(req)
-        puts "Cannot notify sentry for new deployment. Response: #{response.code.inspect}: #{response.body}" unless response.is_a? Net::HTTPSuccess
+        if response.is_a? Net::HTTPSuccess
+          info 'Uploaded deployment infos to Sentry'
+        else
+          warn "Cannot notify sentry for new deployment. Response: #{response.code.inspect}: #{response.body}"
+        end
       else
-        puts "Cannot notify sentry for new release. Response: #{response.code.inspect}: #{response.body}"
+        warn "Cannot notify sentry for new release. Response: #{response.code.inspect}: #{response.body}"
       end
     end
   end
