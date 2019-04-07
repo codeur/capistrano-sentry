@@ -19,9 +19,11 @@ Then, add this line to your application's Capfile:
 require 'capistrano/sentry'
 ```
 
-And then execute:
+And then execute from your command line:
 
-    $ bundle
+```bash
+bundle
+```
 
 ## Usage
 
