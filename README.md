@@ -29,6 +29,7 @@ Add these lines to your application's `config/deploy.rb`:
 
 ```ruby
 # Sentry deployment notification
+set :sentry_host, 'https://my-sentry.mycorp.com' # https://sentry.io by default
 set :sentry_api_token, 'd9fe44a1cf34e63993e258dbecf42158918d407978a1bb72f8fb5886aa5f9fe1'
 set :sentry_organization, 'my-org' # fetch(:application) by default
 set :sentry_project, 'my-proj'     # fetch(:application) by default
