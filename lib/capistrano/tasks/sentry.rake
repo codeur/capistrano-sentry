@@ -22,17 +22,18 @@ namespace :sentry do
       require 'net/https'
       require 'json'
 
-      uri = URI.parse('https://sentry.io')
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-
       version = `git rev-parse HEAD`.strip
 
+      sentry_host = ENV["SENTRY_HOST"] || fetch(:sentry_host, 'https://sentry.io')
       orga_slug = fetch(:sentry_organization) || fetch(:application)
       project = fetch(:sentry_project) || fetch(:application)
       environment = fetch(:stage) || 'default'
       api_token = ENV['SENTRY_API_TOKEN'] || fetch(:sentry_api_token)
       repo_name = fetch(:sentry_repo) || fetch(:repo_url).split(':').last.gsub(/\.git$/, '')
+
+      uri = URI.parse(sentry_host)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
 
       headers = {
         'Content-Type' => 'application/json',
