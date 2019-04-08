@@ -1,21 +1,13 @@
 # This task will notify Sentry via their API[1] that you have deployed
-# a new release. It uses the release timestamp as the `version`
-# (like 20151113182847) and the git ref as the optional `ref` value.
-#
-# This task requires several environment variables be set (or just
-# hardcode the values in here if you like living on the edge):
-#
-#   ENV['SENTRY_API_ENDPOINT'] : API endpoint, https://app.getsentry.com
-#   ENV['SENTRY_ORG']          : the organization for this app
-#   ENV['SENTRY_PROJECT']      : the project for this app
-#   ENV['SENTRY_AUTH_TOKEN']   : a valid Auth token (replaces API Key)
+# a new release. It uses the commit hash as the `version` and the git ref as
+# the optional `ref` value.
 #
 # [1]: https://docs.getsentry.com/hosted/api/releases/post-project-releases
 
 # For Rails app, this goes in config/deploy.rb
 
 namespace :sentry do
-  desc 'Notice new deployment in Sentry (sentry.io)'
+  desc 'Notice new deployment in Sentry'
   task :notice_deployment do
     run_locally do
       require 'uri'
@@ -24,7 +16,7 @@ namespace :sentry do
 
       version = `git rev-parse HEAD`.strip
 
-      sentry_host = ENV["SENTRY_HOST"] || fetch(:sentry_host, 'https://sentry.io')
+      sentry_host = ENV['SENTRY_HOST'] || fetch(:sentry_host, 'https://sentry.io')
       orga_slug = fetch(:sentry_organization) || fetch(:application)
       project = fetch(:sentry_project) || fetch(:application)
       environment = fetch(:stage) || 'default'
@@ -45,8 +37,7 @@ namespace :sentry do
         version: version,
         refs: [{
           repository: repo_name,
-          commit: fetch(:current_revision) || `git rev-parse HEAD`.strip,
-          # previousCommit: fetch(:previous_revision)
+          commit: fetch(:current_revision) || `git rev-parse HEAD`.strip
         }],
         projects: [project]
       )
