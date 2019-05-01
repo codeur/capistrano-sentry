@@ -62,8 +62,3 @@ namespace :sentry do
     end
   end
 end
-
-# If you want deployments to be published in every Rails environment, put this
-# in config/deploy.rb, otherwise put it your environment-specific deploy file
-# i.e. config/deploy/production.rb
-# after 'deploy:published', 'sentry:notice_deployment'

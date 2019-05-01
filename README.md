@@ -36,9 +36,14 @@ set :sentry_api_token, '0123456789abcdef0123456789abcdef'
 set :sentry_organization, 'my-org' # fetch(:application) by default
 set :sentry_project, 'my-proj'     # fetch(:application) by default
 set :sentry_repo, 'my-org/my-proj' # computed from repo_url by default
+```
 
+If you want deployments to be published in every Rails environment, put this in `config/deploy.rb`, otherwise put it your environment-specific deploy file (i.e. `config/deploy/production.rb`):
+```ruby
 after 'deploy:published', 'sentry:notice_deployment'
 ```
+
+### Explaination of Configuration Properties
 
 * `sentry_host`: identifies to which host Sentry submissions are sent. [https://sentry.io by default]
 
@@ -53,6 +58,10 @@ after 'deploy:published', 'sentry:notice_deployment'
 [https://sentry.io/settings/{ORGANIZATION_SLUG}/projects/{PROJECT_SLUG}]
 
 * `sentry_repo`: The `repository` name to be used when reporting repository details to Sentry [computed from `fetch(:repo_url)` by default -- `https://github.com/codeur/capistrano-sentry` becomes `//github.com/codeur/capistrano-sentry` and `git@github.com:codeur/capistrano-sentry.git` becomes `codeur/capistrano-sentry`]
+
+### Sentry API Documentation
+* [Project Releases](https://docs.sentry.io/api/releases/post-project-releases/)
+* [Release Deploys](https://docs.sentry.io/api/releases/post-release-deploys/)
 
 ## Development
 
