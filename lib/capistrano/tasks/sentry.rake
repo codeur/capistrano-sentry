@@ -1,8 +1,9 @@
-# This task will notify Sentry via their API[1] that you have deployed
+# This task will notify Sentry via their API[1][2] that you have deployed
 # a new release. It uses the commit hash as the `version` and the git ref as
 # the optional `ref` value.
 #
-# [1]: https://docs.getsentry.com/hosted/api/releases/post-project-releases
+# [1]: https://docs.sentry.io/api/releases/post-project-releases/
+# [2]: https://docs.sentry.io/api/releases/post-release-deploys/
 
 # For Rails app, this goes in config/deploy.rb
 
