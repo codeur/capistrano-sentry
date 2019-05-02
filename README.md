@@ -2,9 +2,6 @@
 
 Simple extension of capistrano for automatic notification of Sentry.
 
-TODO: Prevent user at deployment start if missing parameter to inform sentry
-      properly
-
 ## Installation
 
 Add this line to your application's Gemfile:
