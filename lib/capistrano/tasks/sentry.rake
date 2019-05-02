@@ -16,6 +16,7 @@ namespace :sentry do
       require 'json'
 
       head_revision = fetch(:current_revision) || `git rev-parse HEAD`.strip
+      prev_revision = fetch(:previous_revision) || `git rev-parse #{fetch(:current_revision)}^`.strip
 
       sentry_host = ENV['SENTRY_HOST'] || fetch(:sentry_host, 'https://sentry.io')
       organization_slug = fetch(:sentry_organization) || fetch(:application)
@@ -25,8 +26,8 @@ namespace :sentry do
       repo_integration_enabled = fetch(:sentry_repo_integration, true)
       release_refs = fetch(:sentry_release_refs, [{
         repository: fetch(:sentry_repo) || fetch(:repo_url).split(':').last.gsub(/\.git$/, ''),
-        commit: fetch(:current_revision) || head_revision,
-        previousCommit: fetch(:previous_revision),
+        commit: head_revision,
+        previousCommit: prev_revision,
       }])
       release_version = fetch(:sentry_release_version) || head_revision
       deploy_name = fetch(:sentry_deploy_name) || "#{release_version}-#{fetch(:release_timestamp)}"
