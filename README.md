@@ -47,9 +47,8 @@ after 'deploy:published', 'sentry:notice_deployment'
 
 * `sentry_host`: identifies to which host Sentry submissions are sent. [https://sentry.io by default]
 
-* `sentry_api_token`: Deploy Tokens are project-specific and can be found on Sentry's Project Release Tracking
- page (`Project Settings > SDK Setup > Releases > Deploy Token`).
- [https://sentry.io/settings/{ORGANIZATION_SLUG}/projects/{PROJECT_SLUG}/release-tracking/]
+* `sentry_api_token`: API Auth Tokens are found/created in you Sentry Account Settings (not in the organization or project): `Settings > Account > Api > Auth Tokens`.
+ [https://sentry.io/settings/account/api/auth-tokens/]
 
 * `sentry_organization`: The "**Name**" ("*A unique ID used to identify this organization*") from Sentry's Organization Settings page.
 [https://sentry.io/settings/{ORGANIZATION_SLUG}]
