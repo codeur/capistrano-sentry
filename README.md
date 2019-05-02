@@ -7,7 +7,7 @@ Simple extension of capistrano for automatic notification of Sentry.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'capistrano-sentry'
+gem 'capistrano-sentry', require: false
 ```
 
 Then, add this line to your application's Capfile:
