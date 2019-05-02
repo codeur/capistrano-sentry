@@ -34,6 +34,7 @@ set :sentry_organization, 'my-org' # fetch(:application) by default
 set :sentry_project, 'my-proj'     # fetch(:application) by default
 set :sentry_repo, 'my-org/my-proj' # computed from repo_url by default
 
+before 'deploy:starting', 'sentry:validate_config'
 after 'deploy:published', 'sentry:notice_deployment'
 ```
 

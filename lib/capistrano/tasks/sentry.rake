@@ -13,9 +13,9 @@ end
 
 namespace :sentry do
   desc 'Confirm configuration for notification to Sentry'
-  task :validate_sentry_config do
+  task :validate_config do
     run_locally do
-      info '[sentry:validate_sentry_config] Validating Sentry notification config'
+      info '[sentry:validate_config] Validating Sentry notification config'
       api_token = ENV['SENTRY_API_TOKEN'] || fetch(:sentry_api_token)
       if api_token.nil? || api_token.empty?
         msg = "Missing SENTRY_API_TOKEN. Please set SENTRY_API_TOKEN environment variable or `set :sentry_api_token` in your `config/deploy.rb` file for your Rails application."
@@ -24,7 +24,6 @@ namespace :sentry do
       end
     end
   end
-  before 'deploy:starting', 'sentry:validate_sentry_config'
 
   desc 'Notice new deployment in Sentry'
   task :notice_deployment do
