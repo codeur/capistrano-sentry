@@ -59,6 +59,14 @@ after 'deploy:published', 'sentry:notice_deployment'
 
 * `sentry_repo`: The `repository` name to be used when reporting repository details to Sentry [computed from `fetch(:repo_url)` by default -- `https://github.com/codeur/capistrano-sentry` becomes `//github.com/codeur/capistrano-sentry` and `git@github.com:codeur/capistrano-sentry.git` becomes `codeur/capistrano-sentry`]
 
+* `sentry_repo_integration`: this enables/disables submission of git repo information (`release_refs` below) to Sentry [Enabled (`true`) by default].
+
+* `sentry_release_refs`: Repository details about this realease (`repository`, `commit`, `previousCommit`) to Sentry [computed from `sentry_repo`, `current_revision`, and `previous_revision`)].
+
+* `sentry_release_version`: Version number (tag, etc.) used to identify this release to Sentry [computed from `current_revision` or repository `HEAD`)].
+
+* `deploy_name`: A name (revision, version number, tag, etc.) used to identify this release deploy to Sentry [computed from `sentry_release_version`+`fetch(:release_timestamp)`)].
+
 ### Sentry API Documentation
 * [Project Releases](https://docs.sentry.io/api/releases/post-project-releases/)
 * [Release Deploys](https://docs.sentry.io/api/releases/post-release-deploys/)
