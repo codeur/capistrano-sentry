@@ -7,7 +7,25 @@
 
 # For Rails app, this goes in config/deploy.rb
 
+module Capistrano
+  class SentryConfigurationError < StandardError
+  end
+end
+
 namespace :sentry do
+  desc 'Confirm configuration for notification to Sentry'
+  task :validate_config do
+    run_locally do
+      info '[sentry:validate_config] Validating Sentry notification config'
+      api_token = ENV['SENTRY_API_TOKEN'] || fetch(:sentry_api_token)
+      if api_token.nil? || api_token.empty?
+        msg = "Missing SENTRY_API_TOKEN. Please set SENTRY_API_TOKEN environment variable or `set :sentry_api_token` in your `config/deploy.rb` file for your Rails application."
+        warn msg
+        fail Capistrano::SentryConfigurationError, msg
+      end
+    end
+  end
+
   desc 'Notice new deployment in Sentry'
   task :notice_deployment do
     run_locally do

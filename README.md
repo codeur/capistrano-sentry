@@ -2,9 +2,6 @@
 
 Simple extension of capistrano for automatic notification of Sentry.
 
-TODO: Prevent user at deployment start if missing parameter to inform sentry
-      properly
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -40,6 +37,7 @@ set :sentry_repo, 'my-org/my-proj' # computed from repo_url by default
 
 If you want deployments to be published in every Rails environment, put this in `config/deploy.rb`, otherwise put it your environment-specific deploy file (i.e. `config/deploy/production.rb`):
 ```ruby
+before 'deploy:starting', 'sentry:validate_config'
 after 'deploy:published', 'sentry:notice_deployment'
 ```
 
