@@ -1,0 +1,99 @@
+AllCops:
+  TargetRubyVersion: 2.4
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+  IndentationWidth: 2
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+  IndentationWidth: 2
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+  IndentationWidth: 2
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Metrics/AbcSize:
+  Max: 65
+
+Metrics/BlockLength:
+  Max: 70
+
+Metrics/ClassLength:
+  Max: 300
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/MethodLength:
+  Max: 60
+
+Metrics/ModuleLength:
+  Max: 300
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Naming/FileName:
+  Enabled: false
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  AutoCorrect: true
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Style/GuardClause:
+  MinBodyLength: 3
+
+Style/HashEachMethods:
+  Enabled: true
+  AutoCorrect: true
+
+Style/HashTransformKeys:
+  Enabled: true
+  AutoCorrect: true
+
+Style/HashTransformValues:
+  Enabled: true
+  AutoCorrect: true
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/MultipleComparison:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
+
+Style/SymbolArray:
+  MinSize: 7

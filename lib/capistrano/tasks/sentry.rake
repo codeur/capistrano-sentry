@@ -21,7 +21,8 @@ namespace :sentry do
       info '[sentry:validate_config] Validating Sentry notification config'
       api_token = ENV['SENTRY_API_TOKEN'] || fetch(:sentry_api_token)
       if api_token.blank?
-        msg = 'Missing SENTRY_API_TOKEN. Please set SENTRY_API_TOKEN environment variable or `set :sentry_api_token` in your `config/deploy.rb` file for your Rails application.'
+        msg = 'Missing SENTRY_API_TOKEN. Please set SENTRY_API_TOKEN environment' \
+          ' variable or `set :sentry_api_token` in your `config/deploy.rb` file for your Rails application.'
         warn msg
         raise Capistrano::SentryConfigurationError, msg
       end
@@ -71,7 +72,10 @@ namespace :sentry do
       response = http.request(req)
       if response.is_a? Net::HTTPSuccess
         info "Notified Sentry of new release: #{release_version}"
-        req = Net::HTTP::Post.new("/api/0/organizations/#{organization_slug}/releases/#{release_version}/deploys/", headers)
+        req = Net::HTTP::Post.new(
+          "/api/0/organizations/#{organization_slug}/releases/#{release_version}/deploys/",
+          headers
+        )
         req.body = JSON.generate(
           environment: environment,
           name:        deploy_name

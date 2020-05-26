@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Brice Texier']
   spec.email         = ['brice@codeur.com']
   spec.description   = 'Sentry release/deployment integration'
-  spec.summary       = 'Sentry release/deployment integration'
+  spec.summary       = 'Push release and deployment information on Sentry on each deploy'
   spec.homepage      = 'https://github.com/codeur/capistrano-sentry'
   spec.license       = 'MIT'
 

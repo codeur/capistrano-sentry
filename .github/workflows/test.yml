@@ -1,0 +1,42 @@
+name: Test
+
+on: [push]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby: [ '2.6' ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+
+      - name: Retrieve gems cache
+        uses: actions/cache@v1.1.2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+
+      - name: Install gems
+        run: |
+          rm -f .ruby-version
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Run tests
+        run: bundle exec rake test
+
+      - name: Upload log if failure
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: test.log
+          path: log/test.log
