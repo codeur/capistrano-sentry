@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This task will notify Sentry via their API[1][2] that you have deployed
 # a new release. It uses the commit hash as the `version` and the git ref as
 # the optional `ref` value.
@@ -18,10 +20,10 @@ namespace :sentry do
     run_locally do
       info '[sentry:validate_config] Validating Sentry notification config'
       api_token = ENV['SENTRY_API_TOKEN'] || fetch(:sentry_api_token)
-      if api_token.nil? || api_token.empty?
-        msg = "Missing SENTRY_API_TOKEN. Please set SENTRY_API_TOKEN environment variable or `set :sentry_api_token` in your `config/deploy.rb` file for your Rails application."
+      if api_token.blank?
+        msg = 'Missing SENTRY_API_TOKEN. Please set SENTRY_API_TOKEN environment variable or `set :sentry_api_token` in your `config/deploy.rb` file for your Rails application.'
         warn msg
-        fail Capistrano::SentryConfigurationError, msg
+        raise Capistrano::SentryConfigurationError, msg
       end
     end
   end
@@ -43,9 +45,9 @@ namespace :sentry do
       api_token = ENV['SENTRY_API_TOKEN'] || fetch(:sentry_api_token)
       repo_integration_enabled = fetch(:sentry_repo_integration, true)
       release_refs = fetch(:sentry_release_refs, [{
-        repository: fetch(:sentry_repo) || fetch(:repo_url).split(':').last.gsub(/\.git$/, ''),
-        commit: head_revision,
-        previousCommit: prev_revision,
+        repository:     fetch(:sentry_repo) || fetch(:repo_url).split(':').last.delete_suffix('.git'),
+        commit:         head_revision,
+        previousCommit: prev_revision
       }])
       release_version = fetch(:sentry_release_version) || head_revision
       deploy_name = fetch(:sentry_deploy_name) || "#{release_version}-#{fetch(:release_timestamp)}"
@@ -55,14 +57,14 @@ namespace :sentry do
       http.use_ssl = true
 
       headers = {
-        'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer ' + api_token.to_s,
+        'Content-Type'  => 'application/json',
+        'Authorization' => 'Bearer ' + api_token.to_s
       }
 
       req = Net::HTTP::Post.new("/api/0/organizations/#{organization_slug}/releases/", headers)
       body = {
-        version: release_version,
-        projects: [project],
+        version:  release_version,
+        projects: [project]
       }
       body[:refs] = release_refs if repo_integration_enabled
       req.body = JSON.generate(body)
@@ -72,7 +74,7 @@ namespace :sentry do
         req = Net::HTTP::Post.new("/api/0/organizations/#{organization_slug}/releases/#{release_version}/deploys/", headers)
         req.body = JSON.generate(
           environment: environment,
-          name: deploy_name,
+          name:        deploy_name
         )
         response = http.request(req)
         if response.is_a? Net::HTTPSuccess
