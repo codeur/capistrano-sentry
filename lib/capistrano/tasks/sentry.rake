@@ -20,7 +20,7 @@ namespace :sentry do
     run_locally do
       info '[sentry:validate_config] Validating Sentry notification config'
       api_token = ENV['SENTRY_API_TOKEN'] || fetch(:sentry_api_token)
-      if api_token.blank?
+      if api_token.nil? || api_token.empty?
         msg = 'Missing SENTRY_API_TOKEN. Please set SENTRY_API_TOKEN environment' \
           ' variable or `set :sentry_api_token` in your `config/deploy.rb` file for your Rails application.'
         warn msg
