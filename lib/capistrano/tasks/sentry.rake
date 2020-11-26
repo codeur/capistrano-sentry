@@ -59,7 +59,7 @@ namespace :sentry do
 
       headers = {
         'Content-Type'  => 'application/json',
-        'Authorization' => 'Bearer ' + api_token.to_s
+        'Authorization' => "Bearer #{api_token}"
       }
 
       req = Net::HTTP::Post.new("/api/0/organizations/#{organization_slug}/releases/", headers)
