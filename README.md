@@ -51,7 +51,7 @@ after 'deploy:published', 'sentry:notice_deployment'
 * `sentry_organization`: The "**Name**" ("*A unique ID used to identify this organization*") from Sentry's Organization Settings page.
 [https://sentry.io/settings/{ORGANIZATION_SLUG}]
 
-* `sentry_project`: The "**Name**" ("*A unique ID used to identify this project*") from Sentry's Project Settings page.
+* `sentry_project`: The "**Name**" ("*A unique ID used to identify this project*") from Sentry's Project Settings page. Separate multiple projects names by whitespace.
 [https://sentry.io/settings/{ORGANIZATION_SLUG}/projects/{PROJECT_SLUG}]
 
 * `sentry_repo`: The `repository` name to be used when reporting repository details to Sentry [computed from `fetch(:repo_url)` by default -- `https://github.com/codeur/capistrano-sentry` becomes `//github.com/codeur/capistrano-sentry` and `git@github.com:codeur/capistrano-sentry.git` becomes `codeur/capistrano-sentry`]

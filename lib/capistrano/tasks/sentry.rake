@@ -65,7 +65,7 @@ namespace :sentry do
       req = Net::HTTP::Post.new("/api/0/organizations/#{organization_slug}/releases/", headers)
       body = {
         version:  release_version,
-        projects: [project]
+        projects: project.split(' ').reject(&:empty?)
       }
       body[:refs] = release_refs if repo_integration_enabled
       req.body = JSON.generate(body)
