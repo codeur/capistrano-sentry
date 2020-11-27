@@ -45,6 +45,8 @@ namespace :sentry do
       environment = fetch(:stage) || 'default'
       api_token = ENV['SENTRY_API_TOKEN'] || fetch(:sentry_api_token)
       repo_integration_enabled = fetch(:sentry_repo_integration, true)
+      files_glob_pattern = fetch(:sentry_files_glob_pattern, '')
+      files_prefix = fetch(:sentry_files_prefix, '')
       release_refs = fetch(:sentry_release_refs, [{
         repository:     fetch(:sentry_repo) || fetch(:repo_url).split(':').last.delete_suffix('.git'),
         commit:         head_revision,
@@ -62,6 +64,7 @@ namespace :sentry do
         'Authorization' => "Bearer #{api_token}"
       }
 
+      # Notify release
       req = Net::HTTP::Post.new("/api/0/organizations/#{organization_slug}/releases/", headers)
       body = {
         version:  release_version,
@@ -69,9 +72,42 @@ namespace :sentry do
       }
       body[:refs] = release_refs if repo_integration_enabled
       req.body = JSON.generate(body)
-      response = http.request(req)
-      if response.is_a? Net::HTTPSuccess
+      response_release = http.request(req)
+      if response_release.is_a? Net::HTTPSuccess
         info "Notified Sentry of new release: #{release_version}"
+      end
+
+      # Upload files if configured
+      unless files_glob_pattern.empty?
+        if response_release.is_a? Net::HTTPSuccess
+          info "Uploading files to sentry: #{files_glob_pattern} with prefix #{files_prefix}"
+          Dir.glob(files_glob_pattern).each do |file|
+            name = "#{files_prefix}#{File.basename(file)}"
+
+            req = Net::HTTP::Post.new(
+              "/api/0/organizations/#{organization_slug}/releases/#{release_version}/files/",
+              headers
+            )
+
+            form_data = [['name', name], ['file', File.open(file)]]
+            req.set_form form_data, 'multipart/form-data'
+
+            response_file = http.request(req)
+            if response_file.is_a? Net::HTTPSuccess
+              info " - #{file} -> #{name}"
+            else
+              warn " - Cannot upload file. Response: #{response_file.code.inspect}: #{response_file.body}"
+            end
+          end
+          # end Dir.glob(...).each do|file|
+        else
+          warn "Cannot upload sourcemaps to sentry for new release. \
+            Response: #{response_release.code.inspect}: #{response_release.body}"
+        end
+      end
+
+      # Notify deployment
+      if response_release.is_a? Net::HTTPSuccess
         req = Net::HTTP::Post.new(
           "/api/0/organizations/#{organization_slug}/releases/#{release_version}/deploys/",
           headers
@@ -80,14 +116,16 @@ namespace :sentry do
           environment: environment,
           name:        deploy_name
         )
-        response = http.request(req)
-        if response.is_a? Net::HTTPSuccess
+        response_deploy = http.request(req)
+        if response_deploy.is_a? Net::HTTPSuccess
           info "Notified Sentry of new deployment: #{deploy_name}"
         else
-          warn "Cannot notify sentry for new deployment. Response: #{response.code.inspect}: #{response.body}"
+          warn "Cannot notify sentry for new deployment. \
+            Response: #{response_deploy.code.inspect}: #{response_deploy.body}"
         end
       else
-        warn "Cannot notify sentry for new release. Response: #{response.code.inspect}: #{response.body}"
+        warn "Cannot notify sentry for new release. \
+          Response: #{response_release.code.inspect}: #{response_release.body}"
       end
     end
   end
