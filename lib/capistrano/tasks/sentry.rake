@@ -15,9 +15,19 @@ module Capistrano
 end
 
 namespace :sentry do
+  # Only the stages listed in `:sentry_stages` (`production` by default) notify Sentry.
+  def sentry_stage_enabled?
+    Array(fetch(:sentry_stages, %w[production])).map(&:to_s).include?(fetch(:stage).to_s)
+  end
+
   desc 'Confirm configuration for notification to Sentry'
   task :validate_config do
     run_locally do
+      unless sentry_stage_enabled?
+        info "[sentry:validate_config] Skipped: stage #{fetch(:stage).inspect} is not listed in :sentry_stages"
+        next
+      end
+
       info '[sentry:validate_config] Validating Sentry notification config'
       api_token = ENV['SENTRY_API_TOKEN'] || fetch(:sentry_api_token)
       if api_token.nil? || api_token.empty?
@@ -32,6 +42,11 @@ namespace :sentry do
   desc 'Notice new deployment in Sentry'
   task :notice_deployment do
     run_locally do
+      unless sentry_stage_enabled?
+        info "[sentry:notice_deployment] Skipped: stage #{fetch(:stage).inspect} is not listed in :sentry_stages"
+        next
+      end
+
       require 'uri'
       require 'net/https'
       require 'json'

@@ -33,9 +33,10 @@ set :sentry_api_token, '0123456789abcdef0123456789abcdef'
 set :sentry_organization, 'my-org' # fetch(:application) by default
 set :sentry_project, 'my-proj'     # fetch(:application) by default
 set :sentry_repo, 'my-org/my-proj' # computed from repo_url by default
+set :sentry_stages, %w[production] # only these stages create releases and deploys, %w[production] by default
 ```
 
-If you want deployments to be published in every Rails environment, put this in `config/deploy.rb`, otherwise put it your environment-specific deploy file (i.e. `config/deploy/production.rb`):
+Then hook the tasks in `config/deploy.rb`:
 ```ruby
 before 'deploy:starting', 'sentry:validate_config'
 after 'deploy:published', 'sentry:notice_deployment'
@@ -55,6 +56,8 @@ after 'deploy:published', 'sentry:notice_deployment'
 [https://sentry.io/settings/{ORGANIZATION_SLUG}/projects/{PROJECT_SLUG}]
 
 * `sentry_repo`: The `repository` name to be used when reporting repository details to Sentry [computed from `fetch(:repo_url)` by default -- `https://github.com/codeur/capistrano-sentry` becomes `//github.com/codeur/capistrano-sentry` and `git@github.com:codeur/capistrano-sentry.git` becomes `codeur/capistrano-sentry`]
+
+* `sentry_stages`: the Capistrano stages allowed to create releases and deploys in Sentry. Both tasks are skipped for any other stage, so a staging deploy never creates a release. [`%w[production]` by default]
 
 * `sentry_repo_integration`: this enables/disables submission of git repo information (`release_refs` below) to Sentry [Enabled (`true`) by default].
 
